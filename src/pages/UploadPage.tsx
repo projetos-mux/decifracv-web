@@ -35,7 +35,8 @@ export default function UploadPage() {
         method: "POST",
         body: formData,
         headers: {
-          "x-api-key": "f2703d43843dd69fc4bf9f4687bba445"
+          //"x-api-key": "421406e01293a635fc0d5a6bafc89f30"
+          "x-api-key": "ceb5f70ea140b07c60f9fa1a3b85d77b"
         }
       });
 
