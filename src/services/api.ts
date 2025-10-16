@@ -5,7 +5,6 @@ export async function apiFetch(url: string, options: any = {}) {
 
   const headers = {
     ...(options.headers || {}),
-    "Content-Type": options.body ? "application/json" : undefined,
     ...(token
       ? { Authorization: `Bearer ${token}` }
       : apiKey
