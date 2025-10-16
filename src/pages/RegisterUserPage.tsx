@@ -11,8 +11,7 @@ export default function RegisterUserPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // ⚙️ Aqui você pode importar de um .env no futuro
-  const API_KEY = "421406e01293a635fc0d5a6bafc89f30";
+  const API_KEY = import.meta.env.VITE_API_KEY;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +20,7 @@ export default function RegisterUserPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/api/v1/auth/register`, {
+      const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

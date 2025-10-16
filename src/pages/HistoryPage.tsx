@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../services/api";
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+
 interface ResumeItem {
   id: number;
   file_name: string;
@@ -55,8 +57,6 @@ export default function HistoryPage() {
   });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  const API_KEY = "421406e01293a635fc0d5a6bafc89f30";
 
   const loadResumes = async (params: Record<string, any> = {}) => {
     try {

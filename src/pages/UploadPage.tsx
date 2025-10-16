@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import { apiFetch } from "../services/api";
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+
 interface ResumeData {
   full_name?: string;
   email?: string;
@@ -35,7 +37,7 @@ export default function UploadPage() {
         method: "POST",
         body: formData,
         headers: {
-          "x-api-key": "421406e01293a635fc0d5a6bafc89f30"
+          "x-api-key": API_KEY
           //"x-api-key": "ceb5f70ea140b07c60f9fa1a3b85d77b"
         }
       });

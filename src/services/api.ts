@@ -13,7 +13,7 @@ export async function apiFetch(url: string, options: any = {}) {
       : {}),
   };
 
-  const response = await fetch(`${API_BASE}/api/v1${url}`, {
+  const response = await fetch(`${API_BASE}${url}`, {
     ...options,
     headers,
   });
