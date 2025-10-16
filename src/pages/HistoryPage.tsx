@@ -9,7 +9,22 @@ interface ResumeItem {
   created_at: string;
   cost_brl: number;
   processing_ms: number;
-  data_json?: Record<string, any>;
+  data_json?: {
+    data?: {
+      full_name?: string;
+      email?: string;
+      phones?: string[];
+      summary?: string;
+      skills?: string[];
+      experience?: {
+        company: string;
+        title: string;
+        start?: string;
+        end?: string;
+        achievements?: string[];
+      }[];
+    };
+  };
 }
 
 export default function HistoryPage() {
@@ -94,43 +109,95 @@ export default function HistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {resumes.map((resume) => (
-                <>
-                  <tr
-                    key={resume.id}
-                    className="border-b border-gray-700/40 cursor-pointer hover:bg-white/5"
-                    onClick={() => toggleExpand(resume.id)}
-                  >
-                    <td className="py-2">{resume.full_name || "Indefinido"}</td>
-                    <td>{resume.file_name}</td>
-                    <td>{(resume.confidence ?? 0).toFixed(2)}</td>
-                    <td>{resume.cost_brl?.toFixed(4) ?? "—"}</td>
-                    <td>{((resume.processing_ms ?? 0) / 1000).toFixed(2)}</td>
-                    <td>{new Date(resume.created_at).toLocaleString("pt-BR")}</td>
-                    <td className="text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(resume.id);
-                        }}
-                        className="text-red-400 hover:text-red-500 transition cursor-pointer"
-                      >
-                        Excluir
-                      </button>
-                    </td>
-                  </tr>
-
-                  {expandedRowId === resume.id && (
-                    <tr className="bg-white/5 border-b border-gray-700/20">
-                      <td colSpan={7} className="p-4">
-                        <pre className="bg-black/40 rounded-lg p-3 text-xs text-gray-200 overflow-x-auto max-h-96">
-                          {JSON.stringify(resume.data_json, null, 2)}
-                        </pre>
+              {resumes.map((resume) => {
+                const data = resume.data_json?.data;
+                return (
+                  <>
+                    <tr
+                      key={resume.id}
+                      className="border-b border-gray-700/40 cursor-pointer hover:bg-white/5"
+                      onClick={() => toggleExpand(resume.id)}
+                    >
+                      <td className="py-2">{resume.full_name || "Indefinido"}</td>
+                      <td>{resume.file_name}</td>
+                      <td>{(resume.confidence ?? 0).toFixed(2)}</td>
+                      <td>{resume.cost_brl?.toFixed(4) ?? "—"}</td>
+                      <td>{((resume.processing_ms ?? 0) / 1000).toFixed(2)}</td>
+                      <td>{new Date(resume.created_at).toLocaleString("pt-BR")}</td>
+                      <td className="text-right">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(resume.id);
+                          }}
+                          className="text-red-400 hover:text-red-500 transition cursor-pointer"
+                        >
+                          Excluir
+                        </button>
                       </td>
                     </tr>
-                  )}
-                </>
-              ))}
+
+                    {expandedRowId === resume.id && data && (
+                      <tr className="bg-white/5 border-b border-gray-700/20">
+                        <td colSpan={7} className="p-6 text-sm">
+                          <div className="space-y-4">
+                            <h2 className="text-xl font-semibold text-[#00CC82]">
+                              {data.full_name}
+                            </h2>
+                            <p><strong>Email:</strong> {data.email}</p>
+                            <p><strong>Telefone:</strong> {data.phones?.join(", ") || "—"}</p>
+                            <p className="text-gray-200 italic">{data.summary}</p>
+
+                            {data.skills && data.skills.length > 0 && (
+                              <div>
+                                <h3 className="font-semibold text-[#00CC82] mt-4 mb-2">
+                                  Habilidades
+                                </h3>
+                                <div className="flex flex-wrap gap-2">
+                                  {data.skills.map((skill, i) => (
+                                    <span
+                                      key={i}
+                                      className="bg-[#00CC82]/20 border border-[#00CC82]/40 text-[#00CC82] px-3 py-1 rounded-full text-xs font-medium"
+                                    >
+                                      {skill}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {data.experience && data.experience.length > 0 && (
+                              <div className="mt-4">
+                                <h3 className="font-semibold text-[#00CC82] mb-2">Experiências</h3>
+                                <div className="space-y-3">
+                                  {data.experience.map((exp, i) => (
+                                    <div
+                                      key={i}
+                                      className="bg-black/30 rounded-lg p-3 border border-white/10"
+                                    >
+                                      <p className="font-semibold">{exp.title}</p>
+                                      <p className="text-gray-300 text-sm">
+                                        {exp.company} ({exp.start} – {exp.end})
+                                      </p>
+                                      {exp.achievements && (
+                                        <ul className="list-disc list-inside text-gray-400 text-xs mt-1">
+                                          {exp.achievements.map((ach, j) => (
+                                            <li key={j}>{ach}</li>
+                                          ))}
+                                        </ul>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                );
+              })}
             </tbody>
           </table>
         </div>

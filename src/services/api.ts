@@ -1,19 +1,27 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-export const API_KEY = import.meta.env.VITE_API_KEY;
+// src/services/api.ts
+export async function apiFetch(url: string, options: any = {}) {
+  const token = localStorage.getItem("token");
+  const apiKey = import.meta.env.VITE_API_KEY; // da .env do front
 
-export async function apiFetch(endpoint: string, options: RequestInit = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
   const headers = {
-    "x-api-key": API_KEY,
     ...(options.headers || {}),
+    "Content-Type": options.body ? "application/json" : undefined,
+    ...(token
+      ? { Authorization: `Bearer ${token}` }
+      : apiKey
+      ? { "x-api-key": apiKey }
+      : {}),
   };
 
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(`http://127.0.0.1:8000/api/v1${url}`, {
+    ...options,
+    headers,
+  });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Erro HTTP ${response.status}`);
+  if (response.status === 401) {
+    console.warn("Sessão expirada ou credenciais inválidas.");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   }
 
   return response;
