@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const API_KEY = import.meta.env.VITE_API_KEY
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -20,7 +21,7 @@ export default function LoginPage() {
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
         body: JSON.stringify({ email, password }),
       });
 
