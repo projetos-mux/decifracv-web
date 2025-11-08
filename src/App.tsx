@@ -10,6 +10,7 @@ import RegisterUserPage from "./pages/RegisterUserPage";
 import CompaniesPage from "./pages/CompaniesPage";
 import LoginPage from "./pages/LoginPage";
 import LinkText from "./components/LinkText";
+import UsersPage from "./pages/UsersPage";
 
 function Navbar() {
   const { isAuthenticated, logout } = useAuth();
@@ -28,6 +29,7 @@ function Navbar() {
           <LinkText path="/history" text="Histórico" />
           <LinkText path="/metrics" text="Métricas" />
           <LinkText path="/companies" text="Empresas" />
+          <LinkText path="/users" text="Usuários" />
           <LinkText path="/register" text="Cadastrar Usuários" />
         </>
       )}
@@ -89,6 +91,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <CompaniesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <ProtectedRoute>
+                  <UsersPage />
                 </ProtectedRoute>
               }
             />
